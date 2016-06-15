@@ -4,7 +4,7 @@ var path=require('path');
 var bodyParser=require('body-parser');
 var urlencodedParser = bodyParser.urlencoded( {extended: false} );
 
-var server=app.listen( 3000, 'localhost', function(){
+var server=app.listen(process.env.PORT || 3000, function() {
   console.log('server is on');
 });
 
@@ -15,6 +15,8 @@ app.get('/', function(req, res){
 });
 
 app.post('/calculate', urlencodedParser, function(req, res){
+  console.log( "it's pinging here, too");
+  console.log( req.body.inputX + " " + req.body.inputY + " " + req.body.operation );
   res.write("it's pinging from calculate");
   res.end();
 });

@@ -6,23 +6,28 @@
 //Once the server receives it, build out logic to compute the numbers in 1 of 4 different ways. The server should be able to handle Addition, Subtraction, Multiplication, and Division. Once the calculation is complete, it should be sent back down to the client side app where it should be displayed on the DOM.
 //
 // Finally, build a 'clear' button that resets the whole experience.
-
+var mathOperator = '';
 console.log("jscript is working");
 
 $(document).ready(function(){
   console.log('jquery is here');
-  $('#submit').on('click', function(event){
-    event.preventDefault();
+  $('#submit').on('click', function(){
     console.log('submit clicked');
-    inputIn();
+
+  var inputX = $('#input1').val();
+  var inputY = $('#input2').val();
+
+  var inputObject = {
+    "inputX": inputX,
+    "inputY": inputY,
+    "operation": mathOperator
+    };
+  console.log(inputObject.inputX + " " + inputObject.inputY + " " + inputObject.operation);
+  objectSend(inputObject);
   });
 
-
-
-
-function inputIn(){
-    var mathOperator='';
       $('#addition').on('click', function(){
+        console.log('add button clicked');
         mathOperator = 'add';
         });
       $('#subtraction').on('click', function(){
@@ -34,18 +39,21 @@ function inputIn(){
       $('#division').on('click', function(){
         mathOperator = 'divide';
         });
-        $('#submit').on('click', function(){
-          var inputX = $('#input1').val();
-          var inputY = $('#input2').val();
-          var inputObject = {
-            "varX": inputX,
-            "varY": inputY,
-            "type": mathOperator
-          };
-          console.log(inputObject);
-          return(inputIn());
-        });
-}
-// inputIn();
-console.log(inputIn());
-});
+
+function objectSend( objectToSend ){
+  console.log('in objectSend ' + objectToSend.inputX);
+  $.ajax({
+    type: "POST",
+    url: "/calculate",
+    data: objectToSend,
+    success: function ( data ){
+      console.log("success: " + data );
+      //  displayAnswer( data );
+      },//end success
+      error: function()
+      {
+        console.log( 'error connecting' );
+      }
+    });//end ajax call
+  }//end function objectSend
+});//end JQuery document
